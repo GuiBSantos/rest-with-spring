@@ -3,7 +3,7 @@ name: Continuous Integration and Delivery with GitHub Actions
 on:
   push:
     branches:
-      - "main"
+      - main
 
 jobs:
   build:
@@ -25,20 +25,19 @@ jobs:
       - name: Setup Java 21
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
-          java-version: '21'
+          distribution: temurin
+          java-version: 21
           cache: maven
 
       - name: Build Application .jar
         run: mvn clean package
-#        working-directory: .
 
       - name: Docker Compose Build
         run: docker compose build
-#        working-directory: ./spring_with_rest
 
       - name: Push to Docker Hub Container Registry
         run: |
-          docker tag ${{ secrets.DOCKER_USERNAME }}/spring-with-rest:latest ${{ secrets.DOCKER_USERNAME }}/spring-with-rest:${{ github.run_id }}
+          docker tag guibsantos/spring-with-rest:latest ${{ secrets.DOCKER_USERNAME }}/spring-with-rest:latest
+          docker tag guibsantos/spring-with-rest:latest ${{ secrets.DOCKER_USERNAME }}/spring-with-rest:${{ github.run_id }}
           docker push ${{ secrets.DOCKER_USERNAME }}/spring-with-rest:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/spring-with-rest:${{ github.run_id }}
