@@ -1,0 +1,37 @@
+services:
+  db:
+    image: mysql:9.3.0
+    restart: always
+    environment:
+      TZ: America/Sao_Paulo
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_USER: ${MYSQL_USERNAME}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: spring_with_rest
+    ports:
+      - "3308:3306"
+    expose:
+      - 3306
+    networks:
+      - gui-network
+  spring-with-rest:
+    image: guibsantos/spring-with-rest
+    ports:
+    - 80:80
+    restart: always
+    build: ./spring_with_rest
+    working_dir: /spring_with_rest
+    environment:
+      TZ: America/Sao_Paulo
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/spring_with_rest?useTimezone=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
+    command: mvn spring-boot:run
+    depends_on:
+      - db
+    networks:
+      - gui-network
+networks:
+  gui-network:
+    driver: bridge
+
