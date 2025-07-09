@@ -31,11 +31,11 @@ jobs:
 
       - name: Build Application .jar
         run: mvn clean package
-        working-directory: ./spring_with_rest
+#        working-directory: .
 
       - name: Docker Compose Build
         run: docker compose build
-        working-directory: ./spring_with_rest
+#        working-directory: ./spring_with_rest
 
       - name: Push to Docker Hub Container Registry
         run: |
